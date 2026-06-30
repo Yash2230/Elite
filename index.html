@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Football Sage, 7v7 Match Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="kicker">Football Sage, Patch Notes</div>
+    <h1>7v7 Match Engine
+      <span class="sub">How the dice decide your matches</span>
+    </h1>
+    <p class="lede">Every duel on the pitch comes down to two numbers. Same number, defense wins. Different numbers, the gap tells you what happens. This page walks through the full sequence: attack, pass, flank, shot, and set pieces.</p>
+    <div class="meta-row">
+      <span>Mode <b>7v7</b></span>
+      <span>Phases <b>4 + Set Pieces</b></span>
+    </div>
+  </header>
+
+  <section class="roles">
+    <p class="roles-title">Roles on the pitch</p>
+    <div class="role-grid">
+      <div class="role-cell"><div class="role-abbr">ST</div><div class="role-name">Striker</div></div>
+      <div class="role-cell"><div class="role-abbr">CM</div><div class="role-name">Central Midfielder</div></div>
+      <div class="role-cell"><div class="role-abbr">RW</div><div class="role-name">Right Winger</div></div>
+      <div class="role-cell"><div class="role-abbr">LW</div><div class="role-name">Left Winger</div></div>
+      <div class="role-cell"><div class="role-abbr">RCB</div><div class="role-name">Center Back</div></div>
+      <div class="role-cell"><div class="role-abbr">LCB</div><div class="role-name">Covering Center Back</div></div>
+      <div class="role-cell"><div class="role-abbr">GK</div><div class="role-name">Goalkeeper</div></div>
+    </div>
+  </section>
+
+  <nav class="index">
+    <ol>
+      <li><a href="#core">Core Rule</a></li>
+      <li><a href="#p1">01 Initiate Attack</a></li>
+      <li><a href="#p2">02 Pass the Ball</a></li>
+      <li><a href="#p3">03 Flank Attack</a></li>
+      <li><a href="#p4">04 Shooting</a></li>
+      <li><a href="#setpieces">Set Pieces</a></li>
+    </ol>
+  </nav>
+
+  <section class="core" id="core">
+    <div class="core-grid">
+      <div class="core-cell same">
+        <div class="label">Same Number</div>
+        <p>Both sides pick the identical number. The duel goes to whoever is defending: tackle made, pass intercepted, or shot saved, depending on the phase.</p>
+      </div>
+      <div class="core-cell diff">
+        <div class="label">Different Numbers</div>
+        <p>Subtract the smaller pick from the larger one. That gap is the difference, and the difference is what actually happens next. Read each phase below for what each gap means.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="phase" id="p1">
+    <div class="phase-head">
+      <span class="phase-num">PHASE 01</span>
+      <h2 class="phase-title">Initiate Attack</h2>
+    </div>
+    <p class="phase-desc">The attacking CM or ST squares up against a Center Back. <span class="roll-range">Range 1 to 4</span></p>
+    <div class="outcomes">
+      <div class="outcome same">
+        <div class="tag">Same</div>
+        <div class="result"><b>Tackle.</b> Defense wins the ball.</div>
+      </div>
+      <div class="outcome diff">
+        <div class="tag">Diff of 2</div>
+        <div class="result"><b>Dribble past.</b> The attacker beats the RCB.</div>
+      </div>
+      <div class="outcome diff">
+        <div class="tag">Diff of 3</div>
+        <div class="result"><b>Freekick + Yellow Card.</b> Two yellows in a match equal a red.</div>
+      </div>
+      <div class="outcome diff">
+        <div class="tag">Diff of 1</div>
+        <div class="result">
+          <b>Second CB covers.</b> A backup Center Back (LCB) steps in. New duel, range 1 to 5.
+          <div class="sub">
+            <div class="sub-row"><span class="sub-range">Same</span> <b>Tackle.</b></div>
+            <div class="sub-row"><span class="sub-range">Diff of 4</span> <b>Interception.</b> RCB does the CM's job.</div>
+            <div class="sub-row"><span class="sub-range">Any other diff</span> <b>CM dribbles past.</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="phase" id="p2">
+    <div class="phase-head">
+      <span class="phase-num">PHASE 02</span>
+      <h2 class="phase-title">Pass the Ball</h2>
+    </div>
+    <p class="phase-desc">The midfield looks to thread it forward. CM/ST vs CM. <span class="roll-range">Range 1 to 6</span></p>
+    <div class="outcomes">
+      <div class="outcome same">
+        <div class="tag">Same</div>
+        <div class="result"><b>Intercepted.</b></div>
+      </div>
+      <div class="outcome diff">
+        <div class="tag">Diff of 2</div>
+        <div class="result"><b>Through ball</b> to the Striker.</div>
+      </div>
+      <div class="outcome diff">
+        <div class="tag">Any other diff</div>
+        <div class="result"><b>Pass to Winger.</b></div>
+      </div>
+      <div class="outcome diff">
+        <div class="tag">Diff of 1</div>
+        <div class="result">
+          <b>Throw-in.</b> RCB vs CM, range 1 to 3.
+          <div class="sub">
+            <div class="sub-row"><span class="sub-range">Same</span> <b>Intercepted.</b></div>
+            <div class="sub-row"><span class="sub-range">Any difference</span> <b>Pass to Winger.</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="phase" id="p3">
+    <div class="phase-head">
+      <span class="phase-num">PHASE 03</span>
+      <h2 class="phase-title">Flank Attack</h2>
+    </div>
+    <p class="phase-desc">The Winger takes a Center Back one on one down the line. <span class="roll-range">Range 1 to 4</span></p>
+    <div class="outcomes">
+      <div class="outcome same">
+        <div class="tag">Same</div>
+        <div class="result"><b>Tackle.</b></div>
+      </div>
+      <div class="outcome diff">
+        <div class="tag">Diff of 3</div>
+        <div class="result"><b>Yellow Card.</b></div>
+      </div>
+      <div class="outcome diff">
+        <div class="tag">Diff of 2</div>
+        <div class="result">
+          <b>Winger vs LCB .</b> New duel, range 1 to 6.
+          <div class="sub">
+            <div class="sub-row"><span class="sub-range">Same</span> <b>Intercepted.</b></div>
+            <div class="sub-row"><span class="sub-range">Diff of 5</span> <b>Corner kick.</b></div>
+            <div class="sub-row"><span class="sub-range">Any other diff</span> <b>Pass to ST.</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="outcome diff">
+        <div class="tag">Diff of 1</div>
+        <div class="result">
+          <b>Winger vs LCB (alternative).</b> Range 1 to 5.
+          <div class="sub">
+            <div class="sub-row"><span class="sub-range">Diff of 4</span> <b>Winger cuts inside to shoot.</b></div>
+            <div class="sub-row"><span class="sub-range">Diff of 1</span> <b>Pass to CM.</b></div>
+            <div class="sub-row"><span class="sub-range">Diff of 2</span> <b>Pass to ST.</b></div>
+            <div class="sub-row"><span class="sub-range">Same</span> <b>Intercepted.</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="phase" id="p4">
+    <div class="phase-head">
+      <span class="phase-num">PHASE 04</span>
+      <h2 class="phase-title">Shooting</h2>
+    </div>
+    <p class="phase-desc">An attacker faces the Goalkeeper, one shot to settle it. <span class="roll-range">Range 1 to 6</span></p>
+    <div class="outcomes">
+      <div class="outcome same">
+        <div class="tag">Same</div>
+        <div class="result"><b>Save.</b></div>
+      </div>
+      <div class="outcome diff">
+        <div class="tag">Diff of 5</div>
+        <div class="result"><b>Offside.</b></div>
+      </div>
+      <div class="outcome diff">
+        <div class="tag">Diff of 4</div>
+        <div class="result"><b>Penalty.</b></div>
+      </div>
+      <div class="outcome diff">
+        <div class="tag">Diff of 3</div>
+        <div class="result"><b>Direct Goal.</b></div>
+      </div>
+      <div class="outcome diff">
+        <div class="tag">Diff of 2</div>
+        <div class="result"><b>Freekick.</b></div>
+      </div>
+      <div class="outcome diff">
+        <div class="tag">Diff of 1</div>
+        <div class="result"><b>Corner.</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="flowmap">
+    <h2 class="flowmap-title">The Full Sequence</h2>
+    <p class="flowmap-desc">A move that survives every phase goes from a midfield duel to a shot on goal. Any "Same" roll along the way hands possession back to the defense.</p>
+    <div class="pitchstrip">
+      <div class="pitchstrip-track">
+        <div class="node"><div class="dot"></div><div class="label">Initiate</div><div class="sub">CM/ST vs RCB</div></div>
+        <div class="connector"></div>
+        <div class="node"><div class="dot"></div><div class="label">Pass</div><div class="sub">CM/ST vs CM</div></div>
+        <div class="connector"></div>
+        <div class="node"><div class="dot"></div><div class="label">Flank</div><div class="sub">Winger vs RCB</div></div>
+        <div class="connector"></div>
+        <div class="node"><div class="dot"></div><div class="label">Shoot</div><div class="sub">Attacker vs GK</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="phase" id="setpieces" style="border-bottom:none;">
+    <div class="phase-head">
+      <span class="phase-num">DEAD BALLS</span>
+      <h2 class="phase-title">Set Pieces</h2>
+    </div>
+    <p class="phase-desc">Cards, corners, and penalties run on their own shorter duels.</p>
+    <div class="setpiece-grid">
+      <div class="sp-card">
+        <h3>Free Kick, Over the Wall</h3>
+        <div class="range">Range 1 to 6</div>
+        <div class="step"><b>Same</b> Blocked by the wall.</div>
+        <div class="step"><b>Any difference</b> Shot clears the wall, moves to a 1v1 vs GK (range 1 to 3).</div>
+        <div class="step indent"><b>Same</b> Save.</div>
+        <div class="step indent"><b>Any difference</b> Goal.</div>
+      </div>
+      <div class="sp-card">
+        <h3>Corner Cross</h3>
+        <div class="range">Range 0 to 9</div>
+        <div class="step"><b>Same</b> Clearance by defender.</div>
+        <div class="step"><b>Any difference</b> Successful cross, moves to a header vs GK (range 1 to 3).</div>
+        <div class="step indent"><b>Same</b> Save.</div>
+        <div class="step indent"><b>Any difference</b> Goal.</div>
+      </div>
+      <div class="sp-card">
+        <h3>Penalty</h3>
+        <div class="range">Range 1 to 4, Attacker vs GK</div>
+        <div class="step"><b>Same</b> Save.</div>
+        <div class="step"><b>Any difference</b> Goal.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="tag-final">Football Sage. 7v7 Match Engine. Patch Notes.</span>
+  </footer>
+</div>
+
+</body>
+</html>
